@@ -725,10 +725,10 @@ class NKChartParser(nn.Module):
             from transformers import BertModel, XLMModel
             if isinstance(self.bert, BertModel):
                 d_bert_annotations = self.bert.pooler.dense.in_features
+                self.bert_max_len = self.bert.embeddings.position_embeddings.num_embeddings
             elif isinstance(self.bert, XLMModel):
-                d_bert_annotations = self.bert.hidden_dim
-
-            self.bert_max_len = self.bert.embeddings.position_embeddings.num_embeddings
+                d_bert_annotations = self.bert.dim
+                self.bert_max_len = self.bert.position_embeddings.num_embeddings
 
             if hparams.use_bert_only:
                 self.project_bert = nn.Linear(d_bert_annotations, hparams.d_model, bias=False)
@@ -1025,8 +1025,9 @@ class NKChartParser(nn.Module):
             all_input_mask = from_numpy(np.ascontiguousarray(all_input_mask[:, :subword_max_len]))
             all_word_start_mask = from_numpy(np.ascontiguousarray(all_word_start_mask[:, :subword_max_len]))
             all_word_end_mask = from_numpy(np.ascontiguousarray(all_word_end_mask[:, :subword_max_len]))
-            all_encoder_layers, _ = self.bert(all_input_ids, attention_mask=all_input_mask)
-            del _
+
+            bert_output = self.bert(all_input_ids, attention_mask=all_input_mask)
+            all_encoder_layers = bert_output[0]
             features = all_encoder_layers[-1]
 
             if self.encoder is not None:
