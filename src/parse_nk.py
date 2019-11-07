@@ -567,6 +567,12 @@ def get_elmo_class():
 def get_bert(bert_model, bert_do_lower_case):
     # Avoid a hard dependency on BERT by only importing it if it's being used
     from transformers import BertTokenizer, BertModel
+    from transformers import XLMModel, XLMTokenizer
+    
+    if "fra" in bert_model:
+        tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=bert_do_lower_case)
+        bert = XLMModel.from_pretrained(bert_model)
+        return tokenizer, bert
     if bert_model.endswith('.tar.gz'):
         tokenizer = BertTokenizer.from_pretrained(bert_model.replace('.tar.gz', '-vocab.txt'), do_lower_case=bert_do_lower_case)
     else:
@@ -715,7 +721,13 @@ class NKChartParser(nn.Module):
             else:
                 self.bert_transliterate = None
 
-            d_bert_annotations = self.bert.pooler.dense.in_features
+
+            from transformers import BertModel, XLMModel
+            if isinstance(self.bert, BertModel):
+                d_bert_annotations = self.bert.pooler.dense.in_features
+            elif isinstance(self.bert, XLMModel):
+                d_bert_annotations = self.bert.hidden_dim
+
             self.bert_max_len = self.bert.embeddings.position_embeddings.num_embeddings
 
             if hparams.use_bert_only:
