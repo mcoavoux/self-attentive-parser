@@ -123,7 +123,7 @@ def run_train(args, hparams):
     print("Processing trees for training...")
     train_parse = [tree.convert() for tree in train_treebank]
 
-    print("Constructing vocabularies...")
+    print("Constructing vocabularies...", flush=True)
 
     tag_vocab = vocabulary.Vocabulary()
     tag_vocab.index(tokens.START)
@@ -192,11 +192,11 @@ def run_train(args, hparams):
         print_vocabulary("Word", word_vocab)
         print_vocabulary("Label", label_vocab)
 
-    print("Initializing model...")
+    print("Initializing model...", flush=True)
 
     load_path = None
     if load_path is not None:
-        print(f"Loading parameters from {load_path}")
+        print(f"Loading parameters from {load_path}", flush=True)
         info = torch_load(load_path)
         parser = parse_nk.NKChartParser.from_spec(info['spec'], info['state_dict'])
     else:
@@ -208,7 +208,7 @@ def run_train(args, hparams):
             hparams,
         )
 
-    print("Initializing optimizer...")
+    print("Initializing optimizer...", flush=True)
     trainable_parameters = [param for param in parser.parameters() if param.requires_grad]
     trainer = torch.optim.Adam(trainable_parameters, lr=1., betas=(0.9, 0.98), eps=1e-9)
     if load_path is not None:
@@ -235,7 +235,7 @@ def run_train(args, hparams):
     clippable_parameters = trainable_parameters
     grad_clip_threshold = np.inf if hparams.clip_grad_norm == 0 else hparams.clip_grad_norm
 
-    print("Training...")
+    print("Training...", flush=True)
     total_processed = 0
     current_processed = 0
     check_every = len(train_parse) / args.checks_per_epoch
@@ -269,7 +269,7 @@ def run_train(args, hparams):
                 dev_fscore,
                 format_elapsed(dev_start_time),
                 format_elapsed(start_time),
-            )
+            ), flush=True
         )
 
         if dev_fscore.fscore > best_dev_fscore:
@@ -278,14 +278,14 @@ def run_train(args, hparams):
                 for ext in extensions:
                     path = best_dev_model_path + ext
                     if os.path.exists(path):
-                        print("Removing previous model file {}...".format(path))
+                        print("Removing previous model file {}...".format(path), flush=True)
                         os.remove(path)
 
             best_dev_fscore = dev_fscore.fscore
             best_dev_model_path = "{}_dev={:.2f}".format(
                 args.model_path_base, dev_fscore.fscore)
             best_dev_processed = total_processed
-            print("Saving new best model to {}...".format(best_dev_model_path))
+            print("Saving new best model to {}...".format(best_dev_model_path), flush=True)
             torch.save({
                 'spec': parser.spec,
                 'state_dict': parser.state_dict(),
@@ -400,7 +400,7 @@ def run_test(args):
         "test-elapsed {}".format(
             test_fscore,
             format_elapsed(start_time),
-        )
+        ), flush=True
     )
 
 #%%
