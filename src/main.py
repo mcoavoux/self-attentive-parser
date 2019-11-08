@@ -471,7 +471,7 @@ def run_parse(args):
     parser = parse_nk.NKChartParser.from_spec(info['spec'], info['state_dict'])
 
     print("Parsing sentences...")
-    with open(args.input_path) as input_file:
+    with open(args.input_path, encoding="utf8") as input_file:
         sentences = input_file.readlines()
     sentences = [sentence.split() for sentence in sentences]
 
@@ -497,7 +497,7 @@ def run_parse(args):
             all_predicted.extend([p.convert() for p in predicted])
 
     if args.output_path != '-':
-        with open(args.output_path, 'w') as output_file:
+        with open(args.output_path, 'w', encoding="utf8") as output_file:
             for tree in all_predicted:
                 output_file.write("{}\n".format(tree.linearize()))
         print("Output written to:", args.output_path)

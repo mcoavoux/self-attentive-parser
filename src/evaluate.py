@@ -53,7 +53,7 @@ def evalb(evalb_dir, gold_trees, predicted_trees, ref_gold_path=None):
     predicted_path = os.path.join(temp_dir.name, "predicted.txt")
     output_path = os.path.join(temp_dir.name, "output.txt")
 
-    with open(gold_path, "w") as outfile:
+    with open(gold_path, "w", encoding="utf8") as outfile:
         if ref_gold_path is None:
             for tree in gold_trees:
                 outfile.write("{}\n".format(tree.linearize()))
@@ -62,10 +62,10 @@ def evalb(evalb_dir, gold_trees, predicted_trees, ref_gold_path=None):
             # (like stripping morphological features), so we compare to the
             # raw gold file to be certain that we haven't spoiled the evaluation
             # in some way.
-            with open(ref_gold_path) as goldfile:
+            with open(ref_gold_path, encoding="utf8") as goldfile:
                 outfile.write(goldfile.read())
 
-    with open(predicted_path, "w") as outfile:
+    with open(predicted_path, "w", encoding="utf8") as outfile:
         for tree in predicted_trees:
             outfile.write("{}\n".format(tree.linearize()))
 
@@ -79,7 +79,7 @@ def evalb(evalb_dir, gold_trees, predicted_trees, ref_gold_path=None):
     subprocess.run(command, shell=True)
 
     fscore = FScore(math.nan, math.nan, math.nan, math.nan)
-    with open(output_path) as infile:
+    with open(output_path, encoding="utf8") as infile:
         for line in infile:
             match = re.match(r"Bracketing Recall\s+=\s+(\d+\.\d+)", line)
             if match:

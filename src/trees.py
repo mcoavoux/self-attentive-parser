@@ -181,7 +181,7 @@ def tree_from_str(treebank, strip_top=True, strip_spmrl_features=True):
     return trees[0]
 
 def load_trees(path, strip_top=True, strip_spmrl_features=True):
-    with open(path) as infile:
+    with open(path, encoding="utf8") as infile:
         treebank = infile.read()
 
     # Features bounded by `##` may contain spaces, so if we strip the features
