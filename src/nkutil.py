@@ -27,12 +27,12 @@ class HParams():
             v = self[k]
             k = k.replace('_', '-')
             if type(v) in (int, float, str):
-                parser.add_argument(f'--{k}', type=type(v), default=v)
+                parser.add_argument(f'--{k}', type=type(v), default=v, help=k)
             elif isinstance(v, bool):
                 if not v:
-                    parser.add_argument(f'--{k}', action='store_true')
+                    parser.add_argument(f'--{k}', action='store_true', help=k)
                 else:
-                    parser.add_argument(f'--no-{k}', action='store_false')
+                    parser.add_argument(f'--no-{k}', action='store_false', help=k)
 
     def set_from_args(self, args):
         for k in dir(self):

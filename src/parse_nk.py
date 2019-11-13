@@ -492,9 +492,11 @@ class MultiLevelEmbedding(nn.Module):
         content_annotations = sum(content_annotations)
         if extra_content_annotations is not None:
             if self.extra_content_dropout is not None:
-                content_annotations += self.extra_content_dropout(extra_content_annotations, batch_idxs)
+                for extra_content in extra_content_annotations:
+                    content_annotations += self.extra_content_dropout(extra_content, batch_idxs)
             else:
-                content_annotations += extra_content_annotations
+                for extra_content in extra_content_annotations:
+                    content_annotations += extra_content
 
         timing_signal = torch.cat([self.position_table[:seq_len,:] for seq_len in batch_idxs.seq_lens_np], dim=0)
         timing_signal = self.timing_dropout(timing_signal, batch_idxs)
@@ -684,15 +686,15 @@ class NKChartParser(nn.Module):
         self.bert = None
         if hparams.use_chars_lstm:
             assert not hparams.use_elmo, "use_chars_lstm and use_elmo are mutually exclusive"
-            assert not hparams.use_bert, "use_chars_lstm and use_bert are mutually exclusive"
-            assert not hparams.use_bert_only, "use_chars_lstm and use_bert_only are mutually exclusive"
+            #assert not hparams.use_bert, "use_chars_lstm and use_bert are mutually exclusive"
+            #assert not hparams.use_bert_only, "use_chars_lstm and use_bert_only are mutually exclusive"
             self.char_encoder = CharacterLSTM(
                 num_embeddings_map['chars'],
                 hparams.d_char_emb,
                 self.d_content,
                 char_dropout=hparams.char_lstm_input_dropout,
             )
-        elif hparams.use_elmo:
+        if hparams.use_elmo:
             assert not hparams.use_bert, "use_elmo and use_bert are mutually exclusive"
             assert not hparams.use_bert_only, "use_elmo and use_bert_only are mutually exclusive"
             self.elmo = get_elmo_class()(
@@ -713,7 +715,7 @@ class NKChartParser(nn.Module):
             # Reshapes the embeddings to match the model dimension, and making
             # the projection trainable appears to improve parsing accuracy
             self.project_elmo = nn.Linear(d_elmo_annotations, self.d_content, bias=False)
-        elif hparams.use_bert or hparams.use_bert_only:
+        if hparams.use_bert or hparams.use_bert_only:
             self.bert_tokenizer, self.bert = get_bert(hparams.bert_model, hparams.bert_do_lower_case)
             if hparams.bert_transliterate:
                 from transliterate import TRANSLITERATIONS
@@ -920,8 +922,9 @@ class NKChartParser(nn.Module):
                     i += 1
             assert i == packed_len
 
-            extra_content_annotations = self.char_encoder(char_idxs_encoder, word_lens_encoder, batch_idxs)
-        elif self.elmo is not None:
+            extra_content_annotations = [self.char_encoder(char_idxs_encoder, word_lens_encoder, batch_idxs)]
+
+        if self.elmo is not None:
             # See https://github.com/allenai/allennlp/blob/c3c3549887a6b1fb0bc8abf77bc820a3ab97f788/allennlp/data/token_indexers/elmo_indexer.py#L61
             # ELMO_START_SENTENCE = 256
             # ELMO_STOP_SENTENCE = 257
@@ -959,8 +962,10 @@ class NKChartParser(nn.Module):
             elmo_annotations_packed = elmo_rep0[elmo_mask.byte()].view(packed_len, -1)
 
             # Apply projection to match dimensionality
-            extra_content_annotations = self.project_elmo(elmo_annotations_packed)
-        elif self.bert is not None:
+            assert extra_content_annotations is None and "not implemented: concatenate"
+            extra_content_annotations = [self.project_elmo(elmo_annotations_packed)]
+
+        if self.bert is not None:
             all_input_ids = np.zeros((len(sentences), self.bert_max_len), dtype=int)
             all_input_mask = np.zeros((len(sentences), self.bert_max_len), dtype=int)
             all_word_start_mask = np.zeros((len(sentences), self.bert_max_len), dtype=int)
@@ -1034,7 +1039,11 @@ class NKChartParser(nn.Module):
                 features_packed = features.masked_select(all_word_end_mask.to(torch.uint8).unsqueeze(-1)).reshape(-1, features.shape[-1])
 
                 # For now, just project the features from the last word piece in each word
-                extra_content_annotations = self.project_bert(features_packed)
+                bert_output = self.project_bert(features_packed)
+                if extra_content_annotations is None:
+                    extra_content_annotations = [bert_output]
+                else:
+                    extra_content_annotations.append(bert_output)
 
         if self.encoder is not None:
             annotations, _ = self.encoder(emb_idxs, batch_idxs, extra_content_annotations=extra_content_annotations)
