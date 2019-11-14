@@ -245,7 +245,7 @@ def run_train(args, hparams):
 
     start_time = time.time()
 
-    def check_dev():
+    def check_dev(epoch):
         nonlocal best_dev_fscore
         nonlocal best_dev_model_path
         nonlocal best_dev_processed
@@ -262,10 +262,11 @@ def run_train(args, hparams):
 
         dev_fscore = evaluate.evalb(args.evalb_dir, dev_treebank, dev_predicted)
 
-        print(
+        print("Epoch {} "
             "dev-fscore {} "
             "dev-elapsed {} "
             "total-elapsed {}".format(
+                epoch,
                 dev_fscore,
                 format_elapsed(dev_start_time),
                 format_elapsed(start_time),
@@ -348,7 +349,7 @@ def run_train(args, hparams):
 
             if current_processed >= check_every:
                 current_processed -= check_every
-                check_dev()
+                check_dev(epoch)
 
         # adjust learning rate at the end of an epoch
         if (total_processed // args.batch_size + 1) > hparams.learning_rate_warmup_steps:
