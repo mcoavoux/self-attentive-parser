@@ -23,6 +23,10 @@ import nkutil
 
 import trees
 
+# Avoid a hard dependency on BERT by only importing it if it's being used
+from transformers import BertTokenizer, BertModel
+from transformers import XLMModel, XLMTokenizer
+
 START = "<START>"
 STOP = "<STOP>"
 UNK = "<UNK>"
@@ -567,10 +571,7 @@ def get_elmo_class():
 
 # %%
 def get_bert(bert_model, bert_do_lower_case):
-    # Avoid a hard dependency on BERT by only importing it if it's being used
-    from transformers import BertTokenizer, BertModel
-    from transformers import XLMModel, XLMTokenizer
-    
+
     if "fra" in bert_model:
         tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=bert_do_lower_case)
         bert = XLMModel.from_pretrained(bert_model)
@@ -723,8 +724,6 @@ class NKChartParser(nn.Module):
             else:
                 self.bert_transliterate = None
 
-
-            from transformers import BertModel, XLMModel
             if isinstance(self.bert, BertModel):
                 d_bert_annotations = self.bert.pooler.dense.in_features
                 self.bert_max_len = self.bert.embeddings.position_embeddings.num_embeddings
@@ -1032,8 +1031,11 @@ class NKChartParser(nn.Module):
             all_word_end_mask = from_numpy(np.ascontiguousarray(all_word_end_mask[:, :subword_max_len]))
 
             bert_output = self.bert(all_input_ids, attention_mask=all_input_mask)
+
+            # switch to transformers from pytorch_pretrained_bert: output has changed
             all_encoder_layers = bert_output[0]
-            features = all_encoder_layers[-1]
+            #features = all_encoder_layers[-1] # for pytorch_pretrained_bert
+            features = all_encoder_layers
 
             if self.encoder is not None:
                 features_packed = features.masked_select(all_word_end_mask.to(torch.uint8).unsqueeze(-1)).reshape(-1, features.shape[-1])
