@@ -27,9 +27,14 @@ import trees
 from transformers import BertTokenizer, BertModel
 from transformers import XLMModel, XLMTokenizer
 
-START = "<START>"
-STOP = "<STOP>"
-UNK = "<UNK>"
+#START = "<START>"
+#STOP = "<STOP>"
+#UNK = "<UNK>"
+
+START = "<s>"
+STOP = "</s>"
+UNK = "<unk>"
+
 
 TAG_UNK = "UNK"
 
@@ -574,7 +579,8 @@ def get_bert(bert_model, bert_do_lower_case):
 
     if "fra" in bert_model:
         tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=bert_do_lower_case)
-        bert = XLMModel.from_pretrained(bert_model)
+        bert, log = XLMModel.from_pretrained(bert_model, output_loading_info=True)
+        print(log)
         return tokenizer, bert
     if bert_model.endswith('.tar.gz'):
         tokenizer = BertTokenizer.from_pretrained(bert_model.replace('.tar.gz', '-vocab.txt'), do_lower_case=bert_do_lower_case)
@@ -976,7 +982,7 @@ class NKChartParser(nn.Module):
                 word_start_mask = []
                 word_end_mask = []
 
-                tokens.append("[CLS]")
+                tokens.append(self.bert_tokenizer.cls_token)
                 word_start_mask.append(1)
                 word_end_mask.append(1)
 
@@ -1008,10 +1014,9 @@ class NKChartParser(nn.Module):
                     word_start_mask[len(tokens)] = 1
                     word_end_mask[-1] = 1
                     tokens.extend(word_tokens)
-                tokens.append("[SEP]")
+                tokens.append(self.bert_tokenizer.sep_token)
                 word_start_mask.append(1)
                 word_end_mask.append(1)
-
                 input_ids = self.bert_tokenizer.convert_tokens_to_ids(tokens)
 
                 # The mask has 1 for real tokens and 0 for padding tokens. Only real
