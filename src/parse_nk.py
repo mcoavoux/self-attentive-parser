@@ -578,7 +578,7 @@ def get_elmo_class():
 def get_bert(bert_model, bert_do_lower_case):
 
     if "fra" in bert_model:
-        tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=bert_do_lower_case)
+        tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=False)
         bert, log = XLMModel.from_pretrained(bert_model, output_loading_info=True)
         print(log)
         return tokenizer, bert
@@ -724,6 +724,7 @@ class NKChartParser(nn.Module):
             self.project_elmo = nn.Linear(d_elmo_annotations, self.d_content, bias=False)
         if hparams.use_bert or hparams.use_bert_only:
             self.bert_tokenizer, self.bert = get_bert(hparams.bert_model, hparams.bert_do_lower_case)
+            self.bert_tokenizer_lower_case = hparams.bert_do_lower_case
             if hparams.bert_transliterate:
                 from transliterate import TRANSLITERATIONS
                 self.bert_transliterate = TRANSLITERATIONS[hparams.bert_transliterate]
@@ -833,6 +834,8 @@ class NKChartParser(nn.Module):
 
     def split_batch(self, sentences, golds, subbatch_max_tokens=3000):
         if self.bert is not None:
+            if self.bert_tokenizer_lower_case:
+                sentences = [[(tag, word.lower()) for tag, word in sentence] for sentence in sentences]
             lens = [
                 len(self.bert_tokenizer.tokenize(' '.join([word for (_, word) in sentence]))) + 2
                 for sentence in sentences
@@ -1007,6 +1010,8 @@ class NKChartParser(nn.Module):
                     cleaned_words = [self.bert_transliterate(word) for _, word in sentence]
 
                 for word in cleaned_words:
+                    if self.bert_tokenizer_lower_case:
+                        word = word.lower()
                     word_tokens = self.bert_tokenizer.tokenize(word)
                     for _ in range(len(word_tokens)):
                         word_start_mask.append(0)
