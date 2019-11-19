@@ -679,7 +679,7 @@ class NKChartParser(nn.Module):
             self.emb_types.append('tags')
         if hparams.use_words:
             self.emb_types.append('words')
-
+            word_type_id = len(self.emb_types) - 1
         self.use_tags = hparams.use_tags
 
         self.morpho_emb_dropout = None
@@ -754,6 +754,9 @@ class NKChartParser(nn.Module):
                 extra_content_dropout=self.morpho_emb_dropout,
                 max_len=hparams.sentence_max_len,
             )
+            if hparams.fasttext != "":
+                import fasttext_embeddings
+                fasttext_embeddings.assign_pretrained(hparams.fasttext, word_vocab, self.embedding.embs[word_type_id])
 
             self.encoder = Encoder(
                 self.embedding,
