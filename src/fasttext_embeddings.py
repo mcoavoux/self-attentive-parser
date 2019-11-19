@@ -21,7 +21,7 @@ def assign_pretrained(filename, vocab, embedding):
     for i, word in enumerate(vocab.values):
         assert(vocab.indices[word] == i)
         if word in vectors:
-            embedding.weight.data[i, :d] = torch.tensor(vectors[word], requires_grad=False).to(device)
+            embedding.weight.data[i, :d] = torch.tensor(vectors[word]).to(device)
             num_modified += 1
     print(f"Loaded fasttext embeddings for {num_modified} words (over {vocab.size})")
 
