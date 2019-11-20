@@ -579,6 +579,7 @@ def get_bert(bert_model, bert_do_lower_case):
 
     if "fra" in bert_model:
         tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=False)
+        tokenizer.do_lowercase_and_remove_accent = False
         bert, log = XLMModel.from_pretrained(bert_model, output_loading_info=True)
         print(log)
         return tokenizer, bert
