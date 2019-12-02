@@ -26,6 +26,7 @@ import trees
 # Avoid a hard dependency on BERT by only importing it if it's being used
 from transformers import BertTokenizer, BertModel
 from transformers import XLMModel, XLMTokenizer
+from transformers import CamembertModel, CamembertTokenizer
 
 #START = "<START>"
 #STOP = "<STOP>"
@@ -577,6 +578,11 @@ def get_elmo_class():
 # %%
 def get_bert(bert_model, bert_do_lower_case):
 
+    if "camembert" in bert_model:
+        tokenizer = CamembertTokenizer.from_pretrained(bert_model, do_lower_case=False)
+        bert = CamembertModel.from_pretrained(bert_model)
+        print("Using camembert!!!")
+        return tokenizer, bert
     if "fra" in bert_model:
         tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=False)
         tokenizer.do_lowercase_and_remove_accent = False
