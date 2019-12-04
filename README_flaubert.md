@@ -1,5 +1,5 @@
 
-Code to reproduce experiments from FlauBERT paper.
+Code to reproduce experiments from [FlauBERT](https://github.com/mcoavoux/self-attentive-parser) paper.
 
 # Set up
 
