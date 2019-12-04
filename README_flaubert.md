@@ -18,11 +18,11 @@ Code to reproduce experiments from FlauBERT paper.
 
 3. Set up parser
 
-    git clone https://github.com/mcoavoux/self-attentive-parser
-    cd self-attentive-parser
-    cd EVALB_SPMRL
-    make
-    cd ..
+        git clone https://github.com/mcoavoux/self-attentive-parser
+        cd self-attentive-parser
+        cd EVALB_SPMRL
+        make
+        cd ..
 
 
 # Train models
