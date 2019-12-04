@@ -32,7 +32,10 @@ Code to reproduce experiments from [FlauBERT](https://github.com/mcoavoux/self-a
     # change path to conda environment in flaubert/expe_master.sh
     # change absolute path to date in flaubert/expe_master.sh
 
+
+    # change absolute path to the Flaubert model (`bert_id_xlm_base` variable) in oar_expe.sh
     bash oar_expe.sh
+    
     # in case oar scheduler is not available, just run commands inside the string passed in arguments of oarsub in oar_expe.sh
 
 
