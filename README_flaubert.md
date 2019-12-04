@@ -12,7 +12,7 @@ Code to reproduce experiments from FlauBERT paper.
 2. Get models
 
 * Flaubert (see [here](https://github.com/getalp/Flaubert))
-* Camembert (todo)
+* Camembert should be available through `from transformers import CamembertModel, CamembertTokenizer`, for now this can be achieved with a local clone/install of [transformers](https://github.com/huggingface/transformers)
 * Fasttext embeddings (download [here](https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz))
 
 
