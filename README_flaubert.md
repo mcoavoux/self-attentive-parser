@@ -3,7 +3,7 @@ Code to reproduce experiments from FlauBERT paper.
 
 # Set up
 
-1. Conda environment
+1. Set up conda environment
 
         conda create --name FlaubertParse --file requirements-conda.txt
         conda activate FlaubertParse
