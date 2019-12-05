@@ -1,5 +1,5 @@
 
-Code to reproduce experiments from [FlauBERT](https://github.com/mcoavoux/self-attentive-parser) paper.
+Code to reproduce constituency parsing experiments from [FlauBERT](https://github.com/mcoavoux/self-attentive-parser) paper.
 
 # Set up
 
@@ -11,7 +11,11 @@ Code to reproduce experiments from [FlauBERT](https://github.com/mcoavoux/self-a
 
 2. Get models
 
-* Flaubert (see [here](https://github.com/getalp/Flaubert))
+* Flaubert (see also instructions [here](https://github.com/getalp/Flaubert), download the `transformers` compatible version of Flaubert-BASE):
+
+        wget https://zenodo.org/record/3562902/files/xlm_bert_fra_base_lower.tar
+        tar xf xlm_bert_fra_base_lower.tar
+
 * Camembert should be available through `from transformers import CamembertModel, CamembertTokenizer`, for now this can be achieved with a local clone/install of [transformers](https://github.com/huggingface/transformers)
 * Fasttext embeddings (download [here](https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz))
 
@@ -29,11 +33,11 @@ Code to reproduce experiments from [FlauBERT](https://github.com/mcoavoux/self-a
 
 
     cd flaubert
-    # change path to conda environment in flaubert/expe_master.sh
-    # change absolute path to date in flaubert/expe_master.sh
 
+    # change absolute path to conda environment in flaubert/expe_master.sh (first line)
+    # change absolute path to data folder in flaubert/expe_master.sh (`SPMRL` variable)
 
-    # change absolute path to the Flaubert model (`bert_id_xlm_base` variable) in oar_expe.sh
+    # change path to `xlm_bert_fra_base_lower` in flaubert/oar_expe.sh (`bert_id_xlm_base` variable)
     bash oar_expe.sh
     
     # in case oar scheduler is not available, just run commands inside the string passed in arguments of oarsub in oar_expe.sh
@@ -57,4 +61,6 @@ Code to reproduce experiments from [FlauBERT](https://github.com/mcoavoux/self-a
     python src/main.py ensemble --test-path ${testpath} --evalb-dir EVALB_SPMRL --model-path-base ${models} --eval-batch-size 50 > log_eval_test
     python src/main.py ensemble --test-path ${devpath}  --evalb-dir EVALB_SPMRL --model-path-base ${models} --eval-batch-size 50 > log_eval_dev
 
+# Pretrained models
 
+TBD
