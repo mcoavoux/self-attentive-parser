@@ -60,8 +60,10 @@ folder="22jan_bertlarge"
 #oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_camembert_seed3    ${bert_camembert}"
 
 
-oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed1     ${flaubert_large_v0}"
-oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed2     ${flaubert_large_v0}"
-oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed3     ${flaubert_large_v0}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_v0_seed1     ${flaubert_large_v0}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_v0_seed2     ${flaubert_large_v0}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_v0_seed3     ${flaubert_large_v0}"
+
+#host='lig-gpu4.imag.fr
 
 
