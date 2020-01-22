@@ -61,7 +61,7 @@ folder="22jan_bertlarge"
 
 
 oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed1     ${flaubert_large_v0}"
-oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed1     ${flaubert_large_v0}"
-oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed1     ${flaubert_large_v0}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed2     ${flaubert_large_v0}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed3     ${flaubert_large_v0}"
 
 
