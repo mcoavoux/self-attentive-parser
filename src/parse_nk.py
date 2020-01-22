@@ -583,7 +583,7 @@ def get_bert(bert_model, bert_do_lower_case):
         bert = CamembertModel.from_pretrained(bert_model)
         print("Using camembert!!!")
         return tokenizer, bert
-    if "fra" in bert_model:
+    if "fra" in bert_model or "flaubert" in bert_model:
         tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=False)
         tokenizer.do_lowercase_and_remove_accent = False
         bert, log = XLMModel.from_pretrained(bert_model, output_loading_info=True)
