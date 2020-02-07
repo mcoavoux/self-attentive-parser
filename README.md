@@ -66,4 +66,21 @@ Here is how to reproduce said experiments
 
 # Pretrained models
 
-TBD
+Download and uncompress pretrained models:
+
+    wget https://zenodo.org/record/3655703/files/french_parsing_models.tar.gz
+    tar xzf french_parsing_models.tar.gz
+
+Parse with pretrained model:
+
+    conda activate FlaubertParse
+
+    # Parse with Flaubert Pretrained model (can much larger batchsize
+    python src/main.py parse --model-path-base french_models/model_xlm_base_seed3_dev\=88.90.pt --input-path to_parse.txt --output-path to_parse.parsed
+
+    # Parse with Camembert Pretrained model
+    python src/main.py parse --model-path-base french_models/model_camembert_seed1_dev\=88.51.pt --input-path to_parse.txt --output-path to_parse.parsed
+
+
+
+
