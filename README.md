@@ -1,8 +1,9 @@
 
 This is a fork from Nikita Kitaev's [self-attentive parser](https://github.com/nikitakit/self-attentive-parser)
-that was used to perform constituency parsing experiments described in [FlauBERT](https://github.com/mcoavoux/self-attentive-parser) paper (upcoming!).
+that was used to perform constituency parsing experiments described in [FlauBERT](https://github.com/mcoavoux/self-attentive-parser) [paper](https://arxiv.org/abs/1912.05372).
 
-Here is how to reproduce said experiments
+
+Here is how to reproduce said experiments.
 
 # Set up
 
