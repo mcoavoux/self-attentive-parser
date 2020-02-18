@@ -27,6 +27,7 @@ import trees
 from transformers import BertTokenizer, BertModel
 from transformers import XLMModel, XLMTokenizer
 from transformers import CamembertModel, CamembertTokenizer
+from transformers import FlaubertModel, FlaubertTokenizer
 
 #START = "<START>"
 #STOP = "<STOP>"
@@ -583,12 +584,11 @@ def get_bert(bert_model, bert_do_lower_case):
         bert = CamembertModel.from_pretrained(bert_model)
         print("Using camembert!!!")
         return tokenizer, bert
-    if "fra" in bert_model or "flaubert" in bert_model:
-        tokenizer = XLMTokenizer.from_pretrained(bert_model, do_lower_case=False)
-        tokenizer.do_lowercase_and_remove_accent = False
-        bert, log = XLMModel.from_pretrained(bert_model, output_loading_info=True)
-        print(log)
+    if bert_model.startswith("flaubert"):
+        tokenizer = FlaubertTokenizer.from_pretrained(bert_model, do_lowercase=("uncased" in bert_model))
+        bert = FlaubertModel.from_pretrained(bert_model)
         return tokenizer, bert
+
     if bert_model.endswith('.tar.gz'):
         tokenizer = BertTokenizer.from_pretrained(bert_model.replace('.tar.gz', '-vocab.txt'), do_lower_case=bert_do_lower_case)
     else:
