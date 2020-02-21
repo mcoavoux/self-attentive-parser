@@ -38,10 +38,10 @@ bert_nobert_fasttext="${usechars} --use-words --fasttext ../cc.fr.300.vec"
 
 
 #folder=3dec_all_experiments
-folder="20fev_bert_large"
+folder="21fev_bert_large"
 
 
-batchsize=12
+batchsize=8
 maxlen=100
 lr=0.00001
 #for lr in 0.0001 0.00005 0.00001 0.000005 0.000001 
