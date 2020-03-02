@@ -2,16 +2,15 @@
 This is a fork from Nikita Kitaev's [self-attentive parser](https://github.com/nikitakit/self-attentive-parser)
 that was used to perform constituency parsing experiments described in [FlauBERT](https://github.com/mcoavoux/self-attentive-parser) [paper](https://arxiv.org/abs/1912.05372).
 
+# Installation: Python / Conda set-up
 
-Here is how to reproduce said experiments.
+    git clone https://github.com/mcoavoux/self-attentive-parser
+    cd self-attentive-parser
 
-# Set up
+    conda create --name FlaubertParse --file requirements-conda.txt
+    conda activate FlaubertParse
+    pip install -r requirements.txt
 
-1. Set up conda environment
-
-        conda create --name FlaubertParse --file requirements-conda.txt
-        conda activate FlaubertParse
-        pip install -r requirements.txt
 
 2. Get models
 
@@ -23,17 +22,36 @@ Here is how to reproduce said experiments.
 * Camembert should be available through `from transformers import CamembertModel, CamembertTokenizer`, for now this can be achieved with a local clone/install of [transformers](https://github.com/huggingface/transformers)
 * Fasttext embeddings (download [here](https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.vec.gz))
 
+# Parse French sentences with pretrained models
 
-3. Set up parser
+Download and uncompress pretrained models:
 
-        git clone https://github.com/mcoavoux/self-attentive-parser
+    wget https://zenodo.org/record/3655703/files/french_parsing_models.tar.gz
+    tar xzf french_parsing_models.tar.gz
+
+Parse with pretrained model:
+
+    conda activate FlaubertParse
+
+    # Parse with Flaubert Pretrained model (adapt batch size depending on available memory)
+    python src/main.py parse --model-path-base french_models/model_xlm_base_seed3_dev\=88.90.pt --input-path to_parse.txt --output-path to_parse.parsed --eval-batch-size 10
+
+    # Parse with Camembert Pretrained model
+    python src/main.py parse --model-path-base french_models/model_camembert_seed1_dev\=88.51.pt --input-path to_parse.txt --output-path to_parse.parsed --eval-batch-size 10
+
+
+# Retrain and evaluate a model
+
+
+
+3. Install Evalb
+
         cd self-attentive-parser
         cd EVALB_SPMRL
         make
         cd ..
 
-
-# Train models
+4. Train models
 
 
     cd flaubert
@@ -66,22 +84,5 @@ Here is how to reproduce said experiments.
     python src/main.py ensemble --test-path ${devpath}  --evalb-dir EVALB_SPMRL --model-path-base ${models} --eval-batch-size 50 > log_eval_dev
 
 # Pretrained models
-
-Download and uncompress pretrained models:
-
-    wget https://zenodo.org/record/3655703/files/french_parsing_models.tar.gz
-    tar xzf french_parsing_models.tar.gz
-
-Parse with pretrained model:
-
-    conda activate FlaubertParse
-
-    # Parse with Flaubert Pretrained model (can much larger batchsize
-    python src/main.py parse --model-path-base french_models/model_xlm_base_seed3_dev\=88.90.pt --input-path to_parse.txt --output-path to_parse.parsed
-
-    # Parse with Camembert Pretrained model
-    python src/main.py parse --model-path-base french_models/model_camembert_seed1_dev\=88.51.pt --input-path to_parse.txt --output-path to_parse.parsed
-
-
 
 
