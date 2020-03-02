@@ -8,14 +8,10 @@ kitaevoptions="--learning-rate 0.00005 --num-layers 2 --batch-size 32 --eval-bat
 
 largeoptions="--num-layers 2 --learning-rate 0.00001  --max-len-train  100 --batch-size 8 --eval-batch-size 16"
 
-
-bert_id_xlm_base="../xlm_bert_fra_base_lower"
-bert_id_xlm_large="../xlm_bert_fra_large_lower"
-
 flaubert_base="   --use-bert --bert-model flaubert-base-cased           --no-bert-do-lower-case     ${kitaevoptions}"
 flaubert_large="  --use-bert --bert-model flaubert-large-cased          --no-bert-do-lower-case     ${largeoptions}"
 camembert_base="  --use-bert --bert-model camembert-base                --no-bert-do-lower-case     ${kitaevoptions}"
-mbert="          --use-bert --bert-model bert-base-multilingual-cased  --no-bert-do-lower-case     ${kitaevoptions}"
+mbert="           --use-bert --bert-model bert-base-multilingual-cased  --no-bert-do-lower-case     ${kitaevoptions}"
 
 # no bert
 bert_nobert="${usechars}"
@@ -45,5 +41,7 @@ oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_camembe
 oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_camembert_seed2    ${camembert_base}"
 oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_camembert_seed3    ${camembert_base}"
 
-
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed1     ${flaubert_large}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed2     ${flaubert_large}"
+oarsub -l /core=8/gpu=1,walltime=30 "bash expe_master.sh ${folder} model_flaubert_large_seed3     ${flaubert_large}"
 
