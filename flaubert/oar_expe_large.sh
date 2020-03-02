@@ -38,7 +38,7 @@ bert_nobert_fasttext="${usechars} --use-words --fasttext ../cc.fr.300.vec"
 
 
 #folder=3dec_all_experiments
-folder="21fev_bert_large"
+folder="26fev_bert_large"
 
 
 batchsize=8
@@ -47,9 +47,9 @@ lr=0.00001
 #for lr in 0.0001 0.00005 0.00001 0.000005 0.000001 
 
 #oarsub -l /core=8/gpu=1,walltime=16 "bash expe_master.sh ${folder} model_flaubert_large_v0_seed_${lr}_${batchsize}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train 80 --batch-size ${batchsize}"
-oarsub -l /core=8/gpu=1,walltime=20 "bash expe_master.sh ${folder} model_flaubert_large_v0_seed_${lr}_${batchsize}_${maxlen}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train ${maxlen} --batch-size ${batchsize}"
-oarsub -l /core=8/gpu=1,walltime=20 "bash expe_master.sh ${folder} model_flaubert_large_v1_seed_${lr}_${batchsize}_${maxlen}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train ${maxlen} --batch-size ${batchsize}"
-oarsub -l /core=8/gpu=1,walltime=20 "bash expe_master.sh ${folder} model_flaubert_large_v2_seed_${lr}_${batchsize}_${maxlen}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train ${maxlen} --batch-size ${batchsize}"
+oarsub -l /core=8/gpu=1,walltime=48 "bash expe_master.sh ${folder} model_flaubert_large_v0_seed_${lr}_${batchsize}_${maxlen}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train ${maxlen} --batch-size ${batchsize}"
+oarsub -l /core=8/gpu=1,walltime=48 "bash expe_master.sh ${folder} model_flaubert_large_v1_seed_${lr}_${batchsize}_${maxlen}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train ${maxlen} --batch-size ${batchsize}"
+oarsub -l /core=8/gpu=1,walltime=48 "bash expe_master.sh ${folder} model_flaubert_large_v2_seed_${lr}_${batchsize}_${maxlen}     ${flaubert_large_v0} --learning-rate  ${lr} --max-len-train ${maxlen} --batch-size ${batchsize}"
 
 
 
