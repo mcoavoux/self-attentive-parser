@@ -44,4 +44,3 @@ https://repo.anaconda.com/pkgs/main/linux-64/mkl_random-1.1.0-py36hd6b4f25_0.con
 https://repo.anaconda.com/pkgs/main/linux-64/numpy-1.17.2-py36haad9e8e_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/pytorch-1.1.0-cuda92py36h65efead_0.conda
 https://conda.anaconda.org/pytorch/noarch/torchvision-0.2.2-py_3.tar.bz2
-
