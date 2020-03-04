@@ -1,5 +1,6 @@
 absl-py==0.8.1
 alabaster==0.7.12
+allennlp==0.9.0
 astor==0.8.0
 attrs==19.3.0
 Babel==2.7.0
@@ -22,6 +23,7 @@ defusedxml==0.6.0
 docutils==0.15.2
 editdistance==0.5.3
 entrypoints==0.3
+filelock==3.0.12
 flaky==3.6.1
 Flask==1.1.1
 Flask-Cors==3.0.8
@@ -136,12 +138,13 @@ termcolor==1.1.0
 terminado==0.8.3
 testpath==0.4.4
 thinc==7.0.8
+tokenizers==0.5.2
 torch==1.1.0
 torchvision==0.2.2
 tornado==6.0.3
 tqdm==4.37.0
 traitlets==4.3.3
-transformers==2.1.1
+transformers==2.5.1
 Unidecode==1.1.1
 urllib3==1.25.6
 wasabi==0.4.0
